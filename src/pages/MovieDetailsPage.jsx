@@ -1,10 +1,11 @@
-import { useEffect, useState, Suspense } from 'react';
+import { useEffect, useState, useRef, Suspense } from 'react';
 import { useParams, useLocation, Link, Outlet } from 'react-router-dom';
 import { fetchMovieDetails } from '../services/Api';
 
 export default function MovieDetailsPage() {
   const { movieId } = useParams();
   const location = useLocation();
+  const backLinkRef = useRef(location.state?.from || '/movies');
   const [movie, setMovie] = useState(null);
   const [error, setError] = useState(null);
 
@@ -32,7 +33,7 @@ export default function MovieDetailsPage() {
 
   return (
     <div>
-      <Link to={backLinkHref}>← Go back</Link>
+      <Link to={backLinkRef.current}>🔙 Go back</Link>
 
       <div style={{ display: 'flex', gap: '20px', marginTop: '20px' }}>
         <img src={posterUrl} alt={title} width="300" />
@@ -52,12 +53,12 @@ export default function MovieDetailsPage() {
       <h3>Additional information</h3>
       <ul>
         <li>
-          <Link to="cast" state={{ from: backLinkHref }}>
+          <Link to="cast" state={{ from: backLinkRef.current }}>
             Cast
           </Link>
         </li>
         <li>
-          <Link to="reviews" state={{ from: backLinkHref }}>
+          <Link to="reviews" state={{ from: backLinkRef.current }}>
             Reviews
           </Link>
         </li>
